@@ -1,0 +1,14 @@
+/Users/alaalb/dev/dotnet-journey/HelloCSharp/bin/Debug/net10.0/HelloCSharp
+/Users/alaalb/dev/dotnet-journey/HelloCSharp/bin/Debug/net10.0/HelloCSharp.deps.json
+/Users/alaalb/dev/dotnet-journey/HelloCSharp/bin/Debug/net10.0/HelloCSharp.runtimeconfig.json
+/Users/alaalb/dev/dotnet-journey/HelloCSharp/bin/Debug/net10.0/HelloCSharp.dll
+/Users/alaalb/dev/dotnet-journey/HelloCSharp/bin/Debug/net10.0/HelloCSharp.pdb
+/Users/alaalb/dev/dotnet-journey/HelloCSharp/obj/Debug/net10.0/HelloCSharp.GeneratedMSBuildEditorConfig.editorconfig
+/Users/alaalb/dev/dotnet-journey/HelloCSharp/obj/Debug/net10.0/HelloCSharp.AssemblyInfoInputs.cache
+/Users/alaalb/dev/dotnet-journey/HelloCSharp/obj/Debug/net10.0/HelloCSharp.AssemblyInfo.cs
+/Users/alaalb/dev/dotnet-journey/HelloCSharp/obj/Debug/net10.0/HelloCSharp.csproj.CoreCompileInputs.cache
+/Users/alaalb/dev/dotnet-journey/HelloCSharp/obj/Debug/net10.0/HelloCSharp.dll
+/Users/alaalb/dev/dotnet-journey/HelloCSharp/obj/Debug/net10.0/refint/HelloCSharp.dll
+/Users/alaalb/dev/dotnet-journey/HelloCSharp/obj/Debug/net10.0/HelloCSharp.pdb
+/Users/alaalb/dev/dotnet-journey/HelloCSharp/obj/Debug/net10.0/HelloCSharp.genruntimeconfig.cache
+/Users/alaalb/dev/dotnet-journey/HelloCSharp/obj/Debug/net10.0/ref/HelloCSharp.dll
