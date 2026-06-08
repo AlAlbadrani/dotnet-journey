@@ -1,75 +1,55 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+using System.Net.Http;
+using System.Threading.Tasks;
+using Newtonsoft.Json.Linq;
 
 namespace HelloCSharp
 {
-    class Employee
-    {
-        public string Name { get; set; } = string.Empty;
-        public string Department { get; set; } = string.Empty;
-        public int Salary { get; set; }
-        public int YearsExperience { get; set; }
-    }
-
     class Program
     {
-        static void Main(string[] args)
+        static async Task Main(string[] args)
         {
-            List<Employee> employees = new List<Employee>
-            {
-                new Employee { Name = "Amir", Department = "Engineering", Salary = 55000, YearsExperience = 1 },
-                new Employee { Name = "Sara", Department = "Engineering", Salary = 75000, YearsExperience = 5 },
-                new Employee { Name = "Johan", Department = "Marketing", Salary = 50000, YearsExperience = 3 },
-                new Employee { Name = "Lisa", Department = "Engineering", Salary = 90000, YearsExperience = 8 },
-                new Employee { Name = "Ahmed", Department = "Marketing", Salary = 60000, YearsExperience = 4 },
-                new Employee { Name = "Emma", Department = "HR", Salary = 48000, YearsExperience = 2 },
-            };
+            Console.WriteLine("Fetching weather for multiple cities simultaneously...\n");
 
-            // 1. All engineers
-            var engineers = employees.Where(e => e.Department == "Engineering");
-            Console.WriteLine("Engineers:");
-            foreach (var e in engineers)
-                Console.WriteLine($"  {e.Name} - {e.Salary} SEK");
+            string[] cities = { "Malmö", "Stockholm", "London", "Tokyo" };
 
-            // 2. Average salary per department
-            var avgByDept = employees
-                .GroupBy(e => e.Department)
-                .Select(g => new { Department = g.Key, AvgSalary = g.Average(e => e.Salary) });
+            // Start all tasks simultaneously
+            Task<string>[] tasks = Array.ConvertAll(cities, city => GetWeatherAsync(city));
 
-            Console.WriteLine("\nAverage salary by department:");
-            foreach (var d in avgByDept)
-                Console.WriteLine($"  {d.Department}: {d.AvgSalary:F0} SEK");
+            // Wait for ALL of them to complete
+            string[] results = await Task.WhenAll(tasks);
 
-            // 3. Top earner
-            var topEarner = employees.OrderByDescending(e => e.Salary).First();
-            Console.WriteLine($"\nTop earner: {topEarner.Name} ({topEarner.Salary} SEK)");
+            foreach (string result in results)
+                Console.WriteLine(result);
+        }
 
-            // 4. Employees with 3+ years experience, sorted by salary
-            var experienced = employees
-                .Where(e => e.YearsExperience >= 3)
-                .OrderByDescending(e => e.Salary)
-                .ToList();
+        static async Task<string> GetWeatherAsync(string city)
+        {
+            using HttpClient client = new HttpClient();
 
-            Console.WriteLine("\nExperienced employees (3+ years), by salary:");
-            foreach (var e in experienced)
-                Console.WriteLine($"  {e.Name} - {e.YearsExperience} yrs - {e.Salary} SEK");
+            // Step 1: Get coordinates
+            string geoUrl = $"https://geocoding-api.open-meteo.com/v1/search?name={Uri.EscapeDataString(city)}&count=1";
+            string geoJson = await client.GetStringAsync(geoUrl);
+            JObject geoData = JObject.Parse(geoJson);
 
-            var aboveSixtyThousand = employees .Where(e => e.Salary > 60000); 
-            Console.WriteLine("Employees with salary above 60k SEK");
-            foreach (var e in aboveSixtyThousand)
-            {
-                Console.WriteLine($" {e.Name} - {e.Department} - {e.Salary}  ");
-            }
+            var results = geoData["results"];
+            if (results == null || !results.HasValues)
+                return $"{city}: Not found";
 
-            var EngineersBudget = employees
-                .Where(e => e.Department == "Engineering")
-                .Sum(e => e.Salary);
-            Console.WriteLine($"Engineering budget: {EngineersBudget} SEK");
+            double lat = results[0]["latitude"].Value<double>();
+            double lon = results[0]["longitude"].Value<double>();
+            string cityName = results[0]["name"].Value<string>();
+            string country = results[0]["country"].Value<string>();
 
-            var leastExp = employees.OrderBy(e => e.YearsExperience).First();
-            Console.WriteLine("Employees with least years of experience at the bottom");
-            Console.WriteLine($" {leastExp.Name} - {leastExp.Department} - {leastExp.YearsExperience}  ");
+            // Step 2: Get weather
+            string weatherUrl = $"https://api.open-meteo.com/v1/forecast?latitude={lat}&longitude={lon}&current_weather=true";
+            string weatherJson = await client.GetStringAsync(weatherUrl);
+            JObject weatherData = JObject.Parse(weatherJson);
+
+            double temp = weatherData["current_weather"]["temperature"].Value<double>();
+            double wind = weatherData["current_weather"]["windspeed"].Value<double>();
+
+            return $"{cityName}, {country}: {temp}°C, wind {wind} km/h";
         }
     }
 }
