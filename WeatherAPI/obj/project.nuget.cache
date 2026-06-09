@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "dgSpecHash": "AAFbTuKefEY=",
+  "success": true,
+  "projectFilePath": "/Users/alaalb/dev/dotnet-journey/WeatherAPI/WeatherAPI.csproj",
+  "expectedPackageFiles": [
+    "/Users/alaalb/.nuget/packages/microsoft.aspnetcore.openapi/10.0.8/microsoft.aspnetcore.openapi.10.0.8.nupkg.sha512",
+    "/Users/alaalb/.nuget/packages/microsoft.openapi/2.0.0/microsoft.openapi.2.0.0.nupkg.sha512"
+  ],
+  "logs": []
+}
